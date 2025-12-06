@@ -1,4 +1,4 @@
-# Spring Boot 4.x Tutorial Project
+# Spring boot 4 what changed
 
 Spring Boot 4.x의 주요 변경사항을 실습하고 학습하기 위한 게시판 프로젝트입니다.
 
