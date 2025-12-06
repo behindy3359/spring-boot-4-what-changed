@@ -48,10 +48,6 @@ spring-boot-4-what-changed/
 │           ├── entity/           # JPA 엔티티
 │           ├── repository/       # 데이터 접근 계층
 │           └── service/          # 비즈니스 로직
-└── document/                     # 프로젝트 문서
-    ├── SpringBoot-Complete-Board-Guide.md
-    ├── SpringBoot-Reply-Feature-Guide.md
-    └── SpringBoot-Version-Comparison.md
 ```
 
 ## 구현 기능
