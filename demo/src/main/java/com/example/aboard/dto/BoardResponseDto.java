@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Getter
-public class BoardResponsedto {
+public class BoardResponseDto {
 
     private Long id;
     private String title;
@@ -19,7 +19,7 @@ public class BoardResponsedto {
     private String createdDate;
     private String modifiedDate;
 
-    public BoardResponsedto(Board entity){
+    public BoardResponseDto(Board entity){
 
         this.id = entity.getId();
         this.title = entity.getTitle();
