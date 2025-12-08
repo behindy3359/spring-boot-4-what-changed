@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${board.title}">게시글</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/detail.css}">
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/board">
+            <i class="bi bi-chat-dots-fill"></i> 익명 게시판
+        </a>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <!-- 에러 메시지 -->
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- 게시글 상세 -->
+    <div class="card">
+        <div class="card-header bg-white py-3">
+            <h2 class="mb-0" th:text="${board.title}">제목</h2>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div>
+                        <span class="ip-badge me-2"
+                              th:style="'background-color: ' + ${board.ipColorCode} + '; color: white;'">
+                            <i class="bi bi-person"></i> <span th:text="${board.nickname}">작성자</span>
+                        </span>
+                    <span class="text-muted" th:text="${board.maskedIp}">211.xxx.xxx.123</span>
+                    <span class="badge bg-secondary ms-2">
+                            <i class="bi bi-eye"></i> <span th:text="${board.viewCount}">0</span>
+                        </span>
+                </div>
+                <div class="text-muted">
+                    <small>
+                        <i class="bi bi-calendar"></i> <span th:text="${board.createdDate}">2024-01-01 12:00</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-4">
+            <div class="content-section" th:text="${board.content}">
+                내용
+            </div>
+        </div>
+
+        <div class="card-footer bg-white py-3">
+            <div class="d-flex justify-content-between">
+                <a th:href="@{/board}" class="btn btn-secondary">
+                    <i class="bi bi-list"></i> 목록
+                </a>
+                <div>
+                    <a th:href="@{/board/{id}/edit(id=${board.id})}" class="btn btn-warning me-2">
+                        <i class="bi bi-pencil"></i> 수정
+                    </a>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <i class="bi bi-trash"></i> 삭제
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 댓글 섹션 -->
+    <div class="card mt-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">
+                <i class="bi bi-chat-dots"></i> 댓글 <span id="commentCount" class="badge bg-primary">0</span>
+            </h5>
+        </div>
+        <div class="card-body">
+            <!-- 댓글 작성 폼 -->
+            <form id="commentForm" class="mb-4 p-3 bg-light rounded">
+                <div class="row g-2 mb-2">
+                    <div class="col-md-6">
+                        <input type="text"
+                               id="commentNickname"
+                               class="form-control"
+                               placeholder="닉네임"
+                               required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="password"
+                               id="commentPassword"
+                               class="form-control"
+                               placeholder="비밀번호 (4자 이상)"
+                               minlength="4"
+                               required>
+                    </div>
+                </div>
+                <div class="mb-2">
+                        <textarea id="commentContent"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="댓글을 입력하세요"
+                                  required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-send"></i> 댓글 작성
+                </button>
+            </form>
+
+            <!-- 댓글 목록 -->
+            <div id="commentList">
+                <!-- 댓글이 동적으로 추가됩니다 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 삭제 모달 -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">게시글 삭제</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form th:action="@{/board/{id}/delete(id=${board.id})}" method="post">
+                <div class="modal-body">
+                    <p>삭제하려면 비밀번호를 입력하세요</p>
+                    <input type="password"
+                           name="password"
+                           class="form-control"
+                           placeholder="비밀번호"
+                           required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="submit" class="btn btn-danger">삭제</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="boardIdInput" th:value="${board.id}">
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/detail.js}"></script>
+</body>
+</html>

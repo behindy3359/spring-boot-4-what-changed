@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>익명 게시판</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/list.css}">
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/board">
+            <i class="bi bi-chat-dots-fill"></i> 익명 게시판
+        </a>
+        <div class="ms-auto">
+            <a href="/board/write" class="btn btn-light">
+                <i class="bi bi-pencil-square"></i> 글쓰기
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <!-- 헤더 -->
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold">
+            <i class="bi bi-clipboard-data"></i> 자유 게시판
+        </h1>
+        <p class="text-muted">닉네임과 비밀번호만으로 자유롭게 소통하세요</p>
+    </div>
+
+    <!-- 검색 -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form th:action="@{/board}" method="get" class="row g-3">
+                <div class="col-md-10">
+                    <input type="text"
+                           class="form-control"
+                           name="keyword"
+                           th:value="${keyword}"
+                           placeholder="제목 또는 내용 검색...">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i> 검색
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 게시글 목록 -->
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                    <tr class="text-center">
+                        <th style="width: 8%">번호</th>
+                        <th style="width: 42%">제목</th>
+                        <th style="width: 18%">작성자</th>
+                        <th style="width: 8%">조회</th>
+                        <th style="width: 8%">댓글</th>
+                        <th style="width: 16%">작성일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${boards.isEmpty()}" class="text-center">
+                        <td colspan="6" class="py-5 text-muted">
+                            <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+                            <p class="mb-0">게시글이 없습니다</p>
+                            <a href="/board/write" class="btn btn-primary mt-3">
+                                <i class="bi bi-pencil"></i> 첫 게시글 작성하기
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:each="board : ${boards}" class="text-center">
+                        <td th:text="${board.id}">1</td>
+                        <td class="text-start">
+                            <a th:href="@{/board/{id}(id=${board.id})}"
+                               class="text-decoration-none text-dark fw-semibold"
+                               th:text="${board.title}">
+                                제목
+                            </a>
+                        </td>
+                        <td>
+                                    <span class="ip-badge"
+                                          th:style="'background-color: ' + ${board.ipColorCode} + '; color: white;'"
+                                          th:text="${board.nickname}">
+                                        익명
+                                    </span>
+                            <br>
+                            <small class="text-muted" th:text="${board.maskedIp}">211.xxx.xxx.123</small>
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary" th:text="${board.viewCount}">0</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary" th:text="${board.commentCount}">0</span>
+                        </td>
+                        <td>
+                            <small th:text="${board.createdDate}">2024-01-01 12:00</small>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 페이징 -->
+            <nav th:if="${boards.totalPages > 0}" class="p-3">
+                <ul class="pagination justify-content-center mb-0">
+                    <li class="page-item" th:classappend="${!boards.hasPrevious()} ? 'disabled'">
+                        <a class="page-link" th:href="@{/board(page=${boards.number - 1}, keyword=${keyword})}">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+
+                    <li class="page-item"
+                        th:each="page : ${#numbers.sequence(0, boards.totalPages - 1)}"
+                        th:classappend="${page == boards.number} ? 'active'">
+                        <a class="page-link"
+                           th:href="@{/board(page=${page}, keyword=${keyword})}"
+                           th:text="${page + 1}">1</a>
+                    </li>
+
+                    <li class="page-item" th:classappend="${!boards.hasNext()} ? 'disabled'">
+                        <a class="page-link" th:href="@{/board(page=${boards.number + 1}, keyword=${keyword})}">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
