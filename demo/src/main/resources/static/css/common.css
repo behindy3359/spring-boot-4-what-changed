@@ -1,0 +1,21 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,.08);
+}
+
+.ip-badge {
+    font-size: 0.85rem;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+}
